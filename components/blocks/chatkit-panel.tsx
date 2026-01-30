@@ -18,7 +18,7 @@ export function ChatKitPanel({ className }: { className?: string }) {
     api: {
       // URL and domainKey required by SDK, but we use custom fetch
       url: proxyUrl,
-      domainKey: '',
+      domainKey: process.env.NEXT_PUBLIC_OPENAI_DOMAIN_KEY || '',
       // Two-phase upload: server returns signed URL, client uploads directly to GCS
       uploadStrategy: { type: 'two_phase' },
       // Route ChatKit protocol requests through proxy, but let GCS uploads go directly

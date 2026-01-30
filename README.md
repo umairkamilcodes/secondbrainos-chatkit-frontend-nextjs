@@ -34,6 +34,21 @@ During setup, Vercel will ask for environment variables. Add:
 |------|-------|
 | `SECONDBRAINOS_API_KEY` | Your Second Brain OS API key |
 
+### Step 3: Configure OpenAI Domain Allowlist
+
+After deployment, you need to add your domain to OpenAI's allowlist:
+
+1. Go to [OpenAI Platform Domain Allowlist](https://platform.openai.com/settings/organization/security/domain-allowlist)
+2. Add your Vercel deployment domain (e.g., `your-app.vercel.app`)
+3. Copy the **Public Domain Key** provided by OpenAI
+4. In Vercel, go to your project's **Settings → Environment Variables** and add:
+
+| Name | Value |
+|------|-------|
+| `NEXT_PUBLIC_OPENAI_DOMAIN_KEY` | Your OpenAI public domain key |
+
+5. **Redeploy** your application in Vercel for the new environment variable to take effect
+
 That's it! Your AI chat assistant will be live at your Vercel URL.
 
 ---
