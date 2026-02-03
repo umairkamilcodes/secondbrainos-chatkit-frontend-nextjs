@@ -8,7 +8,7 @@ import { NextRequest } from 'next/server';
 
 async function forwardToBackend(request: NextRequest) {
   const backendUrl = 'https://openai.secondbrainos.com/chatkit';
-  // CHATKIT_API_KEY contains the full "user_id:secret" format
+  // SECONDBRAINOS_API_KEY contains the full "user_id:secret" format
   const apiKey = process.env.SECONDBRAINOS_API_KEY || '';
 
   // Forward the request body as-is

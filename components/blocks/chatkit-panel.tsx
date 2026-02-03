@@ -53,6 +53,28 @@ export function ChatKitPanel({ className }: { className?: string }) {
       placeholder: 'Type your message...',
       attachments: {
         enabled: true,
+        // Client-side restrictions (UX only - backend enforces actual limits)
+        maxCount: 5,
+        maxSize: 10 * 1024 * 1024, // 10 MB per file
+        // Format matches showOpenFilePicker API: { mimeType: [extensions] }
+        accept: {
+          // Images
+          'image/jpeg': ['.jpg', '.jpeg'],
+          'image/png': ['.png'],
+          'image/gif': ['.gif'],
+          'image/webp': ['.webp'],
+          // Documents
+          'application/pdf': ['.pdf'],
+          'text/plain': ['.txt'],
+          'text/markdown': ['.md', '.markdown'],
+          'text/csv': ['.csv'],
+          // Code files
+          'application/json': ['.json'],
+          'application/xml': ['.xml'],
+          'text/html': ['.html', '.htm'],
+          'text/css': ['.css'],
+          'text/javascript': ['.js', '.mjs'],
+        },
       },
     },
   });
