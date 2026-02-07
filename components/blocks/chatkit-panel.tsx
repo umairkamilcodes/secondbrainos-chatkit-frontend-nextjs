@@ -4,7 +4,13 @@ import { useState, useMemo } from 'react';
 import { ChatKit, useChatKit } from '@openai/chatkit-react';
 import { useTheme } from 'next-themes';
 
-export function ChatKitPanel({ className }: { className?: string }) {
+interface ChatKitPanelProps {
+  className?: string;
+  /** Agent name to use for system prompt lookup. Defaults to 'assistant'. */
+  agentName?: string;
+}
+
+export function ChatKitPanel({ className, agentName = 'assistant' }: ChatKitPanelProps) {
   const [isHovered, setIsHovered] = useState(false);
   const { resolvedTheme } = useTheme();
 
@@ -28,8 +34,11 @@ export function ChatKitPanel({ className }: { className?: string }) {
         if (urlString.includes('storage.googleapis.com')) {
           return fetch(url, init);
         }
+        // Inject agent name header for system prompt lookup
+        const headers = new Headers(init?.headers);
+        headers.set('x-agent-name', agentName);
         // All other requests (ChatKit protocol) go through the proxy
-        return fetch(proxyUrl, init);
+        return fetch(proxyUrl, { ...init, headers });
       },
     },
     theme: {

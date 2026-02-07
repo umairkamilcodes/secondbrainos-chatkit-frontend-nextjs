@@ -89,6 +89,52 @@ Open [http://localhost:3000](http://localhost:3000) to see your AI assistant.
 
 ## Customization
 
+### Custom Agent Names
+
+You can customize the AI assistant's identity by passing an `agent_name` query parameter:
+
+```
+https://your-app.vercel.app/?agent_name=my_custom_agent
+```
+
+The agent name is interpolated into the system prompt template, so the AI will identify as whatever name you provide.
+
+**How it works:**
+
+1. The `agent_name` query parameter is read from the URL
+2. The system prompt template in `lib/prompts.ts` uses `{agent_name}` as a placeholder
+3. The placeholder is replaced with the actual agent name before being sent to the backend
+4. The backend uses this as the system prompt (overriding the default `auto_responder_instructions` from Second Brain OS)
+
+**Customizing the prompt template:**
+
+Edit `lib/prompts.ts` to modify the default system prompt template:
+
+```typescript
+export const AGENT_PROMPTS: Record<string, string> = {
+  assistant: `You are {agent_name}, a helpful AI assistant.
+
+Your role is to help users with their questions and tasks.
+Be professional, accurate, and helpful.
+
+Always provide clear explanations and ask clarifying questions when needed.`,
+};
+```
+
+You can also add multiple named prompts for different use cases:
+
+```typescript
+export const AGENT_PROMPTS: Record<string, string> = {
+  assistant: `You are {agent_name}, a helpful AI assistant...`,
+  'sales-agent': `You are {agent_name}, a sales specialist...`,
+  'support-agent': `You are {agent_name}, a customer support expert...`,
+};
+```
+
+Then access them via URL: `?agent_name=sales-agent`
+
+### Theme & Styling
+
 - **Theme**: Modify colors in `components/blocks/chatkit-panel.tsx` under the `theme` configuration
 - **Greeting**: Change the `startScreen.greeting` message
 - **Styling**: Adjust the container styles and animations
