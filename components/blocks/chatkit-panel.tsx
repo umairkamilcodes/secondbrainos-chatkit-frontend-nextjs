@@ -6,11 +6,11 @@ import { useTheme } from 'next-themes';
 
 interface ChatKitPanelProps {
   className?: string;
-  /** Agent name to use for system prompt lookup. Defaults to 'assistant'. */
+  /** Agent name for system prompt lookup. Only sent when explicitly provided via query param. */
   agentName?: string;
 }
 
-export function ChatKitPanel({ className, agentName = 'assistant' }: ChatKitPanelProps) {
+export function ChatKitPanel({ className, agentName }: ChatKitPanelProps) {
   const [isHovered, setIsHovered] = useState(false);
   const { resolvedTheme } = useTheme();
 
@@ -34,11 +34,14 @@ export function ChatKitPanel({ className, agentName = 'assistant' }: ChatKitPane
         if (urlString.includes('storage.googleapis.com')) {
           return fetch(url, init);
         }
-        // Inject agent name header for system prompt lookup
-        const headers = new Headers(init?.headers);
-        headers.set('x-agent-name', agentName);
+        // Inject agent name header for system prompt lookup (only when explicitly set)
+        if (agentName) {
+          const headers = new Headers(init?.headers);
+          headers.set('x-agent-name', agentName);
+          return fetch(proxyUrl, { ...init, headers });
+        }
         // All other requests (ChatKit protocol) go through the proxy
-        return fetch(proxyUrl, { ...init, headers });
+        return fetch(proxyUrl, init);
       },
     },
     theme: {

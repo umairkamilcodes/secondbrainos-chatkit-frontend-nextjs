@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getSystemPrompt, DEFAULT_AGENT_NAME } from '@/lib/prompts';
+import { getSystemPrompt } from '@/lib/prompts';
 
 /**
  * Proxy route for ChatKit requests.
@@ -17,11 +17,11 @@ async function forwardToBackend(request: NextRequest) {
   // SECONDBRAINOS_API_KEY contains the full "user_id:secret" format
   const apiKey = process.env.SECONDBRAINOS_API_KEY || '';
 
-  // Get agent name from header (sent by ChatKitPanel), default to configured default
-  const agentName = request.headers.get('x-agent-name')?.trim() || DEFAULT_AGENT_NAME;
+  // Get agent name from header (sent by ChatKitPanel only when query param is present)
+  const agentName = request.headers.get('x-agent-name')?.trim() || null;
 
-  // Look up system prompt for this agent
-  const systemPrompt = getSystemPrompt(agentName);
+  // Look up system prompt for this agent (only when agent_name was explicitly provided)
+  const systemPrompt = agentName ? getSystemPrompt(agentName) : null;
 
   // Forward the request body as-is
   const body = await request.text();
